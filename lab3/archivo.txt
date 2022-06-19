@@ -1,0 +1,1 @@
+7 de Junio del 2022,hora 23 7 de Junio del 2022,hora 23 :function getMinutes() { [native code] }
