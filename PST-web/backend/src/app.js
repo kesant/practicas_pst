@@ -1,5 +1,6 @@
 const express = require('express');
 const server = express();
+const cors = require('cors');
 
 //Configuraciones
 server.set('port',8080);
@@ -7,6 +8,7 @@ server.set('host','localhost');
 
 //Middlewares
 server.use(express.json());
+server.use(cors());
 
 //Rutas
 server.get('/', function (req, res) {
