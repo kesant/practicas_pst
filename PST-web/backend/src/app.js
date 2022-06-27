@@ -1,6 +1,7 @@
 const express = require('express');
 const server = express();
 const cors = require('cors');
+const path = require('path');
 
 //Configuraciones
 server.set('port',8080);
@@ -9,10 +10,10 @@ server.set('host','localhost');
 //Middlewares
 server.use(express.json());
 server.use(cors());
-
+server.use(express.static(path.join(__dirname, 'build')));
 //Rutas
 server.get('/', function (req, res) {
-   res.send('<h1> Hola mundo con Express </h1>')
+   res.sendFile(path.join(__dirname, 'build',"index.tml"))
 });
 server.use('/estudiantes', require('./routes/estudiantes.js'));
 server.get('*', (req, res) => {

@@ -11,8 +11,8 @@ export default class Navigation extends Component {
         </button>
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div className="navbar-nav">
-            <Link className="nav-item nav-link active" to="/Estudiante">Estudiates <span className="sr-only">(current)</span></Link>
-            <Link className="nav-item nav-link" to="/Profesores">Profesores</Link>
+            <Link className="nav-item nav-link active" to="/estudiante">Estudiates <span className="sr-only">(current)</span></Link>
+            <Link className="nav-item nav-link" to="/profesores">Profesores</Link>
 
           </div>
         </div>
