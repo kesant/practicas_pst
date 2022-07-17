@@ -1,40 +1,15 @@
-const fs = require('fs');
-const db = {};
+const mysql = require ('mysql2')
+const {database} = require('./keys');
+const pool = mysql.createPool(database);
 
-let PST = {};
-function init() {
-    try {
-        //Intenta cargar el archivo JSON
-        const json_text_PST = fs.readFileSync('./src/pstDatabase.json', 'utf-8')
-        PST = JSON.parse(json_text_PST) //Transforma un String a objeto JSON
-    } catch (e) {
-        //Si no existe, crea el objeto JSON y lo guarda en un archivo .json
-        PST = {
-            estudiantes: [{ nombre: "kevin", id: 202034784 },
-            { nombre: "carla", id: 201987462 }],
-            profesores: {
-                teoria: { nombre: "Msig. Adriana Collaguazo", edad: 20 },
-                practica: [
-                  { nombre: "Ing. Christopher Vaccaro", edad: 27 },
-                  { nombre: "Ing. Stephano León", edad: 27 }
-                ]
-            }
-        }
-        //Transforma un objeto JSON a String y lo guarda en un archivo
-        fs.writeFileSync('./src/pstDatabase.json', JSON.stringify(PST), 'utf-8');
+pool.getConnection((err,con)=>{
+    if(err){
+        /*console.error(err.code);
+        process.exit(0);*/
+        throw err;
     }
-    //se crean variables para acceder a ciertos atributos
-    db.teoria = PST.profesores.teoria;
-    db.practica = PST.profesores.practica;
-    db.profesores = PST.profesores;
-    db.estudiantes = PST.estudiantes;
-}
-function updateDB(){
-    //actualiza el archivo JSON
-    fs.writeFileSync('./src/pstDatabase.json', JSON.stringify(PST), 'utf-8');
-}
-
-db.init = init;
-db.updateDB = updateDB;
-
-module.exports = db;
+    if(con) con.release();
+    console.log('Conexión a la base de datos realizada');
+    return;
+});
+module.exports = pool;

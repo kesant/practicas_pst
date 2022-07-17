@@ -1,29 +1,54 @@
 const db = require("./database.js");
 const estControl = {};
 
-estControl.getEstudiantes = (req,res)=>res.json(db.estudiantes);
-estControl.getEstudiante = (req,res)=>{
-    const estudiante = db.estudiantes.find(
-        (est)=>est.id == req.params.id
-    );
-
-    res.json(estudiante);
+estControl.getEstudiantes = (req,res)=>{
+    db.query("Select * FROM estudiantes", (err,result,fields)=>{
+        if (err) {
+            res.status(500).send(err);
+            console.log(err);
+            return;
+        }
+        res.json(result);
+    });
 }
 
-estControl.postEstudiante = (req,res)=>{
-    const {id, nombre,apellido} = req.body;
-    if(!id || !nombre || !apellido){
-        res.status(400).send("Datos incompletos {id, nombre, apellido}");
+estControl.getEstudiante = (req,res)=>{
+    if(isNaN(req.params.id)){
+        res.status(400).send("No es un id numérico");
         return;
     }
-    const estudiante = {
-        id,
-        nombre,
-        apellido
+    db.query("SELECT * FROM estudiantes WHERE id="+req.params.id, 
+    //db.query("SELECT * FROM estudiantes WHERE apellido='"+req.params.apellido+"'",
+    (err,result,fields)=>{
+        if (err) {
+            res.status(500).send(err);
+            console.log(err);
+            return;
+        }
+        res.json(result);
+    });
+}
+
+
+estControl.postEstudiante = (req,res)=>{
+    const {id,nombre,apellido} = req.body;
+    if(!nombre || !apellido){
+        res.status(400).send("Datos incompletos {nombre, apellido}");
+        return;
     }
-    db.estudiantes.push(estudiante);
-    db.updateDB();
-    res.send('Estudiante ingresado con éxito');
+    let SQLbody = {};
+    if(!id) SQLbody = {nombre,apellido};
+    else    SQLbody = {id,nombre,apellido};
+    
+    db.query("INSERT INTO estudiantes SET ?", [SQLbody],
+    (err,result)=>{
+        if (err) {
+            res.status(500).send(err);
+            console.log(err);
+            return;
+        }
+        res.send('Estudiante insertado con id: '+result.insertId);
+    });
 }
 
 
